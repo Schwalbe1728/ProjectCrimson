@@ -4,18 +4,35 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public float speed;
+    [SerializeField]
+    private ActorMovement Movement;
 
-    private Rigidbody rigidBody;
+    [SerializeField]
+    private ActorMechanics Mechanics;
 
-	void Start () {
-        rigidBody = GetComponent<Rigidbody>();
+    [SerializeField]
+    private PlayerActionCreator ActionCreator;
+
+    private List<ActorActionReceiver> actionReceivers;    
+
+	void Start ()
+    {
+        actionReceivers = new List<ActorActionReceiver>();
+        actionReceivers.Add(Mechanics);
+        actionReceivers.Add(Movement);
 	}
 
     private void FixedUpdate()
     {
-        Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        Vector3 velocity = input * speed;
-        rigidBody.velocity = velocity;
+        while(ActionCreator.CanPopAction)
+        {
+            ActorAction action = ActionCreator.PopAction;
+
+            foreach(ActorActionReceiver receiver in actionReceivers)
+            {
+                receiver.InterpretAction(action);
+            }
+        }
+        
     }
 }
