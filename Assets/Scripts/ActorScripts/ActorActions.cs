@@ -24,11 +24,15 @@ public abstract class MovementAction : ActorAction
 
 public class Move : MovementAction
 {
-    public Move(Vector3 mov) : base(mov)
-    {
+    public bool Sprint { get; private set; }
 
+    public Move(Vector3 mov, bool sprint = false) : base(mov)
+    {
+        Sprint = sprint;
     }
 
-    public Move(float x, float y, float z) : base(new Vector3(x,y,z))
-    { }
+    public Move(float x, float y, float z, bool sprint = false) : base(new Vector3(x,y,z))
+    {
+        Sprint = sprint;
+    }
 }

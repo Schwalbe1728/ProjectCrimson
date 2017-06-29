@@ -42,17 +42,11 @@ public class PlayerActionCreator : MonoBehaviour, ActorActionCreator
     {
         ActionsLeftForThisFrame = MaxActionsToPop;
 
-        if(Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+        if(KeyBindingsWrapper.Movement.MoveKeyPressed)
         {
-            DeclaredActions.Add(
-                                    new Move(
-                                            new Vector3(
-                                                        Input.GetAxisRaw("Horizontal"), 
-                                                        0f,
-                                                        Input.GetAxisRaw("Vertical")
-                                                        )
-                                            )
-                                );
+            DeclaredActions.Add(new Move(
+                    KeyBindingsWrapper.Movement.MoveVector,
+                    KeyBindingsWrapper.Movement.SprintKeyPressed));
         }
 	}
 }
