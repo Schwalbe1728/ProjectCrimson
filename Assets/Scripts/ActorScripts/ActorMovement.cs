@@ -24,7 +24,7 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
 
     public void InterpretAction(ActorAction action)
     {
-        if(action is Move && timeDelay <= 0)
+        if(action is Move && timeDelay <= 0 && !InAir)
         {
             DeclareMovement((action as Move).MovementVector.normalized);
             timeDelay += 1.0f / 60;
@@ -34,8 +34,7 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
         {
             VerticalVelocity = Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpSpeed);
             InAir = true;
-            JumpsAvailable--;
-            timeDelay = momentumDuration;
+            JumpsAvailable--;            
         }
         
     }
