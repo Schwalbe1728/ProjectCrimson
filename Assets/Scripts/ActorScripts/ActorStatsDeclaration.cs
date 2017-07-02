@@ -7,5 +7,9 @@ public enum ActorStatsDeclaration
     EmptyStat,
     Speed,
     SprintSpeed,
-    MaxHealthPoints
+    MaxHealthPoints,
+    CurrentHealthPoints,
+    HealthPointsRegeneration,
+    JumpSpeed,
+    JumpsAllowed    
 }

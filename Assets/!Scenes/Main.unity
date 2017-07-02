@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 309354954}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -321,17 +321,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FloatStats:
-    _Buckets: ffffffff01000000
-    _HashCodes: ffffffff01000000
-    _Next: ffffffffffffffff
-    _Count: 2
-    _Version: 11
-    _FreeList: 0
-    _FreeCount: 1
-    _Keys: 0000000001000000
+    _Buckets: ffffffff00000000020000000100000003000000ffffffff0500000004000000
+    _HashCodes: 0100000003000000020000000400000007000000060000000000000000000000
+    _Next: ffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000
+    _Count: 6
+    _Version: 51
+    _FreeList: -1
+    _FreeCount: 0
+    _Keys: 0100000003000000020000000400000007000000060000000000000000000000
     _Values:
+    - 1
+    - 100
+    - 1.75
+    - 50
+    - 1
+    - 3
     - 0
-    - 500
+    - 0
 --- !u!114 &501462484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,6 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a39239ac620c484fad2804d6a37d1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxActionsToPop: 5
 --- !u!1 &562302486
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,6 +439,7 @@ GameObject:
   - component: {fileID: 1925575974}
   - component: {fileID: 1925575973}
   - component: {fileID: 1925575972}
+  - component: {fileID: 1925575977}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -502,10 +510,24 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1925575971}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 5.58, z: 0}
+  m_LocalRotation: {x: 0.6427876, y: 0, z: 0, w: 0.7660445}
+  m_LocalPosition: {x: 0, y: 9, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 80, y: 0, z: 0}
+--- !u!114 &1925575977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1925575971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0382621428c6512489c5a8689cb70f7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookAtPosition: {fileID: 501462480}
+  MinDistance: 9
+  MaxDistance: 10

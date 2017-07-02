@@ -54,7 +54,7 @@ public class SerializableDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     public TValue this[TKey key]
     {
         get
-        {
+        {            
             int index = FindIndex(key);
             if (index >= 0)
                 return _Values[index];
@@ -459,5 +459,23 @@ public class SerializableDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 [Serializable]
 public class ActorStatsToFloatDictionary : SerializableDictionary<ActorStatsDeclaration, float>
 {
-
+    public new float this[ActorStatsDeclaration key]
+    {
+        get
+        {
+            return (ContainsKey(key)) ?
+                base[key] : 0;
+        }
+        set
+        {
+            if(ContainsKey(key))
+            {
+                base[key] = value;
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
 }

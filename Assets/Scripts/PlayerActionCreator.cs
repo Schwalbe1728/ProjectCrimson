@@ -7,7 +7,7 @@ public class PlayerActionCreator : MonoBehaviour, ActorActionCreator
     private List<ActorAction> DeclaredActions;
 
     [SerializeField]
-    private static int MaxActionsToPop = 3;
+    private int MaxActionsToPop = 3;
 
     private int ActionsLeftForThisFrame;
 
@@ -47,6 +47,11 @@ public class PlayerActionCreator : MonoBehaviour, ActorActionCreator
             DeclaredActions.Add(new Move(
                     KeyBindingsWrapper.Movement.MoveVector,
                     KeyBindingsWrapper.Movement.SprintKeyPressed));
+        }
+
+        if(KeyBindingsWrapper.Movement.JumpKeyDown)
+        {
+            DeclaredActions.Add(new Jump(Vector3.zero));
         }
 	}
 }

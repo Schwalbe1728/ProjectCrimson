@@ -27,8 +27,18 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void FixedUpdate () {
+
+        FloatStats[ActorStatsDeclaration.CurrentHealthPoints] =
+            Mathf.Clamp(FloatStats[ActorStatsDeclaration.CurrentHealthPoints] +
+                        FloatStats[ActorStatsDeclaration.HealthPointsRegeneration] / 60,
+                        0,
+                        FloatStats[ActorStatsDeclaration.MaxHealthPoints]);
+
+        if(Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("HP: " + FloatStats[ActorStatsDeclaration.CurrentHealthPoints]);
+        }
 	}
 
     private void InitFloatStats()

@@ -36,3 +36,10 @@ public class Move : MovementAction
         Sprint = sprint;
     }
 }
+
+public class Jump : MovementAction
+{
+    public Jump(Vector3 movement) : base(movement)
+    {
+    }
+}

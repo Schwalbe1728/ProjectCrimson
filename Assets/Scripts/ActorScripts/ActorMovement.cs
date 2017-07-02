@@ -9,6 +9,15 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     private Vector3 MostRecentVectorDeclaration;
     private float timeDelay = 0;
 
+    private float momentumDuration = 0.5f;
+    private float momentumTime;
+    private Vector3 Momentum;
+
+    private float VerticalVelocity = 0;
+    private float Gravity = Physics.gravity.y;
+
+    private bool InAir = false;
+    private int JumpsAvailable;
 
     [SerializeField]
     private ActorMechanics Mechanics;
@@ -17,9 +26,18 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     {
         if(action is Move && timeDelay <= 0)
         {
-            DeclareMovement((action as Move).MovementVector);
+            DeclareMovement((action as Move).MovementVector.normalized);
             timeDelay += 1.0f / 60;
         }
+
+        if(action is Jump && JumpsAvailable > 0)
+        {
+            VerticalVelocity = Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpSpeed);
+            InAir = true;
+            JumpsAvailable--;
+            timeDelay = momentumDuration;
+        }
+        
     }
 
     public void DeclareMovement(Vector3 mov)
@@ -34,6 +52,9 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
         if (rigidBody == null) Debug.Log("Nie znaleziono RigidBody");
 
         MostRecentVectorDeclaration = Vector3.zero;
+        Momentum = Vector3.zero;
+
+        rigidBody.velocity = Vector3.zero;
     }
 	
 	// Update is called once per frame
@@ -42,9 +63,38 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
         float speed = Mechanics.GetFloatStatValue(ActorStatsDeclaration.Speed);
         float delta = 1.0f / 60;
 
-        rigidBody.velocity = MostRecentVectorDeclaration.normalized * speed;
-        MostRecentVectorDeclaration = Vector3.zero;
+        if (MostRecentVectorDeclaration != Vector3.zero)
+        {
+            Momentum = MostRecentVectorDeclaration * speed;
+            momentumTime = momentumDuration;
+        }
+        else
+        {
+            if(!InAir)
+                momentumTime = Mathf.Clamp(momentumTime - delta, 0, momentumDuration);            
+        }
+
+        rigidBody.velocity = (Momentum * momentumTime / momentumDuration) + new Vector3(0, VerticalVelocity, 0);
+
+        if(InAir) VerticalVelocity += Gravity * delta;
+
+        MostRecentVectorDeclaration = Vector3.zero;        
 
         if (timeDelay > 0) timeDelay -= delta;
+    }  
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("CollisionEnter");
+
+        InAir = false;
+        JumpsAvailable = (int)Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpsAllowed);
+        VerticalVelocity = 0;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        Debug.Log("CollisionExit");
+        InAir = true;
     }
 }

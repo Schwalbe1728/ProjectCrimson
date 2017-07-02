@@ -23,6 +23,8 @@ public class MovementBindings
 
     public bool SprintKeyPressed { get { return Input.GetButton("Sprint"); } }
 
+    public bool JumpKeyDown { get { return Input.GetButtonDown("Jump"); } }
+
     public Vector3 MoveVector
     {
         get
