@@ -26,8 +26,7 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     {
         if(action is Move && timeDelay <= 0 && !InAir)
         {
-            DeclareMovement((action as Move).MovementVector.normalized);
-            timeDelay += 1.0f / 60;
+            DeclareMovement((action as Move).MovementVector.normalized);            
         }
 
         if(action is Jump && JumpsAvailable > 0)
@@ -36,7 +35,8 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
             InAir = true;
             JumpsAvailable--;            
         }
-        
+
+        timeDelay += action.BaseTimeDelay;
     }
 
     public void DeclareMovement(Vector3 mov)
