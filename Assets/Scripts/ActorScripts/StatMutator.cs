@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Scripts.ActorScripts
-{
     public enum MutatorBehaviour
     {
         ValueConstant,
@@ -25,7 +23,7 @@ namespace Assets.Scripts.ActorScripts
         Multiplicator
     }
 
-    class StatMutator
+    public class StatMutator
     {
         private MutatorBehaviour behaviour = MutatorBehaviour.ValueConstant;
         private MutatorDuration duration = MutatorDuration.Immidiate;
@@ -96,7 +94,7 @@ namespace Assets.Scripts.ActorScripts
         /// <param name="val"></param>
         /// <returns></returns>
         public bool Update(float delta, out float val)
-        {
+        {            
             val = (behaviour == MutatorBehaviour.ValuePerSecond) ? Value * delta : Value;
 
             TimeLeft -= delta;
@@ -110,7 +108,7 @@ namespace Assets.Scripts.ActorScripts
         }
     }
 
-    class StatMutatorBus
+    public class StatMutatorBus
     {
         public ActorStatsDeclaration Stat { get; private set; }
 
@@ -135,7 +133,7 @@ namespace Assets.Scripts.ActorScripts
 
             GetMutatorBonuses(delta, out flatBonus, out multiplicator);
 
-            return (value + flatBonus) * multiplicator;
+            return value * multiplicator + flatBonus;
         }
 
         public void GetMutatorBonuses(float delta, out float flat, out float multi)
@@ -171,4 +169,4 @@ namespace Assets.Scripts.ActorScripts
             }
         }
     }
-}
+

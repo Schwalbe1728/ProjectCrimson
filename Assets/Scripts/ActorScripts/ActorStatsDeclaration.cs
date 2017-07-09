@@ -5,11 +5,18 @@ using UnityEngine;
 public enum ActorStatsDeclaration
 {
     EmptyStat,
+
     Speed,
     SprintSpeed,
+
     MaxHealthPoints,
     CurrentHealthPoints,
     HealthPointsRegeneration,
+
     JumpSpeed,
-    JumpsAllowed    
+    JumpsAllowed,
+
+    Damage,
+    DamageBonus,
+    DamageTakenModificator
 }

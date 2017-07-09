@@ -31,7 +31,8 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
 
         if(action is Jump && JumpsAvailable > 0)
         {
-            VerticalVelocity = Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpSpeed);
+            //VerticalVelocity = Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpSpeed);
+            VerticalVelocity = Mechanics.Movement.JumpSpeed;
             InAir = true;
             JumpsAvailable--;            
         }
@@ -59,7 +60,8 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-        float speed = Mechanics.GetFloatStatValue(ActorStatsDeclaration.Speed);
+        //float speed = Mechanics.GetFloatStatValue(ActorStatsDeclaration.Speed);
+        float speed = Mechanics.Movement.Speed;
         float delta = 1.0f / 60;
 
         if (MostRecentVectorDeclaration != Vector3.zero)
@@ -87,7 +89,8 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
         Debug.Log("CollisionEnter");
 
         InAir = false;
-        JumpsAvailable = (int)Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpsAllowed);
+        //JumpsAvailable = (int)Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpsAllowed);
+        JumpsAvailable = (int)Mechanics.Movement.JumpsAvailable;
         VerticalVelocity = 0;
     }
 

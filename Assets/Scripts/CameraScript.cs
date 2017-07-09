@@ -33,7 +33,6 @@ public class CameraScript : MonoBehaviour {
         {
             float dx = Mathf.Pow(lookAtPosition.position.x - transform.position.x, 2);
             float dy = Mathf.Pow(lookAtPosition.position.y - transform.position.y, 2);
-            float dz = Mathf.Pow(lookAtPosition.position.z - transform.position.z, 2);
 
             float newCamZ = lookAtPosition.position.z - Mathf.Sqrt(MinDistance * MinDistance - (dx + dy));
 
@@ -46,7 +45,6 @@ public class CameraScript : MonoBehaviour {
         {
             float dx = Mathf.Pow(lookAtPosition.position.x - transform.position.x, 2);
             float dy = Mathf.Pow(lookAtPosition.position.y - transform.position.y, 2);
-            float dz = Mathf.Pow(lookAtPosition.position.z - transform.position.z, 2);
 
             float newCamZ = -Mathf.Sqrt(MaxDistance * MaxDistance - (dx + dy)) + lookAtPosition.position.z;
 
