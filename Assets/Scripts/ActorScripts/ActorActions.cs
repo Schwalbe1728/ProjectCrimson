@@ -10,6 +10,8 @@ public interface ActorActionReceiver
 public abstract class ActorAction
 {
     public float BaseTimeDelay { get; protected set; }
+
+    public Dictionary<ActorStatsDeclaration, List<StatMutator>> Mutators;
 }
 
 public abstract class MovementAction : ActorAction
@@ -41,5 +43,24 @@ public class Jump : MovementAction
 {
     public Jump(Vector3 movement) : base(movement)
     {
+    }
+}
+
+public class DogdeRoll : MovementAction
+{
+    public DogdeRoll(Vector3 movement) : base(movement)
+    {
+        BaseTimeDelay = 0.8f;
+        
+        Mutators = new Dictionary<ActorStatsDeclaration, List<StatMutator>>();
+
+        Mutators.Add(ActorStatsDeclaration.DamageTakenModificator, new List<StatMutator>());
+        Mutators.Add(ActorStatsDeclaration.Speed, new List<StatMutator>());        
+
+        Mutators[ActorStatsDeclaration.DamageTakenModificator].
+            Add( StatMutatorFactory.TimeElapsedMutatorMultiplicator(0, 0.5f) );
+
+        Mutators[ActorStatsDeclaration.Speed].
+            Add(StatMutatorFactory.TimeElapsedMutatorMultiplicator(1.9f, 0.6f));
     }
 }

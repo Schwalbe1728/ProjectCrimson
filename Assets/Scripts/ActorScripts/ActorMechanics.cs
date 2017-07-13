@@ -17,7 +17,21 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 
     public void InterpretAction(ActorAction action)
     {
+        if(action.Mutators != null)
+        {
+            foreach(ActorStatsDeclaration stat in action.Mutators.Keys)
+            {
+                if(!StatMutators.ContainsKey(stat))
+                {
+                    StatMutators.Add(stat, new StatMutatorBus(stat));
+                }
 
+                foreach(StatMutator mutator in action.Mutators[stat])
+                {
+                    StatMutators[stat].InsertMutator(mutator);
+                }
+            }
+        }
     }
 
     public float GetFloatStatValue(ActorStatsDeclaration stat)
@@ -52,7 +66,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
     {
         FloatStats = new ActorStatsToFloatDictionary();
 
-        FloatStats.Add(ActorStatsDeclaration.Speed, 1);
+        FloatStats.Add(ActorStatsDeclaration.Speed, 1);        
     }
 
     private void UpdateFloatStats(float delta)
@@ -157,6 +171,23 @@ public class HealthStats
         statMutators[stat].InsertMutator(mut);
     }
 
+    public void ApplyDamage(float dmg)
+    {
+        dmg = DamageTakenModificator * dmg;
+
+        AddMutator(ActorStatsDeclaration.CurrentHealthPoints, StatMutatorFactory.ImmidiateMutatorFlat(-dmg));
+    }
+
+    public void ApplyImmidiateHeal(float heal)
+    {
+        AddMutator(ActorStatsDeclaration.CurrentHealthPoints, StatMutatorFactory.ImmidiateMutatorFlat(heal));
+    }
+
+    public void ApplyHealOverTime(float heal, float time)
+    {
+        AddMutator(ActorStatsDeclaration.CurrentHealthPoints, StatMutatorFactory.TimeElapsedMutatorValuePerTime(heal, time));
+    }
+
     public bool IsAlive { get { return CurrentHealthDisplayed > 0; } }
 
     public int CurrentHealthDisplayed { get { return Mathf.RoundToInt(CurrentHealth); } }
@@ -187,4 +218,95 @@ public class HealthStats
                      finalStats[ActorStatsDeclaration.HealthPointsRegeneration] : 0;
         }
     }    
+
+    public float DamageTakenModificator
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.DamageTakenModificator)) ?
+                finalStats[ActorStatsDeclaration.DamageTakenModificator] : 1;
+        }
+    }
+}
+
+public class CombatStats
+{
+    private Dictionary<ActorStatsDeclaration, StatMutatorBus> statMutators;
+    private IDictionary<ActorStatsDeclaration, float> finalStats;
+
+    public CombatStats(Dictionary<ActorStatsDeclaration, StatMutatorBus> mutators, IDictionary<ActorStatsDeclaration, float> statsAfterModif)
+    {
+        statMutators = mutators;
+        finalStats = statsAfterModif;
+    }
+
+    public void AddMutator(ActorStatsDeclaration stat, StatMutator mut)
+    {
+        if (!statMutators.ContainsKey(stat))
+        {
+            statMutators.Add(stat, new StatMutatorBus(stat));
+        }
+
+        statMutators[stat].InsertMutator(mut);
+    }
+    
+    public float Damage
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.Damage)) ?
+                     finalStats[ActorStatsDeclaration.Damage] : 0;
+        }
+    }
+
+    public float DamageVariance
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.DamageVariance)) ?
+                     finalStats[ActorStatsDeclaration.DamageVariance] : 0;
+        }
+    }
+
+    public float CriticalChance
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.CriticalChance)) ?
+                     finalStats[ActorStatsDeclaration.CriticalChance] : 0.01f;
+        }
+    }
+
+    public float CriticalMultiplicator
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.CriticalMultiplicator)) ?
+                     finalStats[ActorStatsDeclaration.CriticalMultiplicator] : 2f;
+        }
+    }
+
+    public float ReloadSpeed
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.ReloadSpeed)) ?
+                     finalStats[ActorStatsDeclaration.ReloadSpeed] : 0;
+        }
+    }
+
+    public float FireRate
+    {
+        get
+        {
+            return (finalStats.ContainsKey(ActorStatsDeclaration.FireRate)) ?
+                     finalStats[ActorStatsDeclaration.FireRate] : 90;
+        }
+    }
+
+    public float AttackDelay
+    {
+        get { return 60.0f / FireRate; }
+    }
+
 }

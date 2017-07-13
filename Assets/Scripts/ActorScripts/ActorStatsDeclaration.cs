@@ -12,11 +12,15 @@ public enum ActorStatsDeclaration
     MaxHealthPoints,
     CurrentHealthPoints,
     HealthPointsRegeneration,
+    DamageTakenModificator,
 
     JumpSpeed,
     JumpsAllowed,
 
     Damage,
-    DamageBonus,
-    DamageTakenModificator
+    DamageVariance,
+    CriticalChance,
+    CriticalMultiplicator,
+    ReloadSpeed,
+    FireRate    
 }

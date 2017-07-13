@@ -170,3 +170,130 @@ using System.Text;
         }
     }
 
+public class StatMutatorFactory
+{    
+    /// <summary>
+    /// Creates Immidiate mutator representing Flat bonus
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    public static StatMutator ImmidiateMutatorFlat(float val)
+    {
+        return new StatMutator(val, false);
+    }
+
+    /// <summary>
+    /// Creates Immidiate mutator representing Multiplicator bonus
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    public static StatMutator ImmidiateMutatorMultiplicator(float val)
+    {
+        StatMutator result = new StatMutator(val, false);
+        result.SetType(MutatorType.Multiplicator);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Creates Constant mutator representing Flat bonus
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    public static StatMutator ConstantMutatorFlat(float val)
+    {
+        return new StatMutator(val, true);
+    }
+
+    /// <summary>
+    /// Creates Constant mutator representing Multiplicator bonus
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    public static StatMutator ConstantMutatorMultiplicator(float val)
+    {
+        StatMutator result = new StatMutator(val, true);
+        result.SetType(MutatorType.Multiplicator);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Creates Constant mutator representing Flat bonus with value distributed per each second
+    /// </summary>
+    /// <param name="val"></param>
+    /// <returns></returns>
+    public static StatMutator ConstantMutatorFlatValuePerSecond(float val)
+    {
+        StatMutator result = new StatMutator(val, true);
+        result.SetBehaviour(MutatorBehaviour.ValuePerSecond);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Creates mutator that is meant to last limited amount of time, represents Flat bonus
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static StatMutator TimeElapsedMutatorFlat(float val, float time)
+    {
+        return new StatMutator(val, time);
+    }
+
+    public static StatMutator TimeElapsedMutatorMultiplicator(float val, float time)
+    {
+        StatMutator result = new StatMutator(val, time);
+        result.SetType(MutatorType.Multiplicator);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Creates mutator that is meant to last limited amount of time, represents Flat bonus
+    /// with it's value decreasing linearly over set time
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static StatMutator TimeElapsedMutatorValueDecrease(float val, float time)
+    {
+        StatMutator result = new StatMutator(val, time);
+        result.SetBehaviour(MutatorBehaviour.ValueDecreasing);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Creates mutator that is meant to last limited amount of time, represents Flat bonus
+    /// with it's value distributed within a second
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static StatMutator TimeElapsedMutatorValuePerSecond(float val, float time)
+    {
+        StatMutator result = new StatMutator(val, time);
+        result.SetBehaviour(MutatorBehaviour.ValuePerSecond);
+
+        return result;
+    }    
+
+    /// <summary>
+    /// Example: Actor is poisoned by poison that is meant to last 3 seconds and take
+    /// 8 HP from it in total.
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static StatMutator TimeElapsedMutatorValuePerTime(float val, float time)
+    {
+        StatMutator result = new StatMutator(val/time, time);
+        result.SetBehaviour(MutatorBehaviour.ValuePerSecond);
+
+        return result;
+    }
+
+}
+
