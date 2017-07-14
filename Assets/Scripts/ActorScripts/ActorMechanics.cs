@@ -14,6 +14,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 
     public MovementStats Movement { get; private set; }
     public HealthStats Health { get; private set; }
+    public CombatStats Combat { get; private set; }
 
     public void InterpretAction(ActorAction action)
     {
@@ -52,6 +53,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 
         Movement = new MovementStats(StatMutators, FloatStatsForThisUpdate);
         Health = new HealthStats(StatMutators, FloatStatsForThisUpdate);
+        Combat = new CombatStats(StatMutators, FloatStatsForThisUpdate);
     }
 	
 	// Update is called once per frame
@@ -59,7 +61,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
     {
         float delta = 1.0f / 60;
 
-        UpdateFloatStats(delta);       
+        UpdateFloatStats(delta);
     }
 
     private void InitFloatStats()
