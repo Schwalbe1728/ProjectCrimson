@@ -44,9 +44,20 @@ public class PlayerActionCreator : MonoBehaviour, ActorActionCreator
 
         if(KeyBindingsWrapper.Movement.MoveKeyPressed)
         {
-            DeclaredActions.Add(new Move(
+            MovementAction tmp = null;
+
+            if(KeyBindingsWrapper.Movement.DodgeRollKeyDown)
+            {
+                tmp = new DodgeRoll(KeyBindingsWrapper.Movement.MoveVector);
+            }
+            else
+            {
+                tmp = new Move(
                     KeyBindingsWrapper.Movement.MoveVector,
-                    KeyBindingsWrapper.Movement.SprintKeyPressed));
+                    KeyBindingsWrapper.Movement.SprintKeyPressed);
+            }
+
+            DeclaredActions.Add(tmp);                   
         }
 
         if(KeyBindingsWrapper.Movement.JumpKeyDown)

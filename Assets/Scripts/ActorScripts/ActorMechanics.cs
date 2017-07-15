@@ -18,18 +18,21 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 
     public void InterpretAction(ActorAction action)
     {
-        if(action.Mutators != null)
+        if (action.Interpreted)
         {
-            foreach(ActorStatsDeclaration stat in action.Mutators.Keys)
+            if (action.Mutators != null)
             {
-                if(!StatMutators.ContainsKey(stat))
+                foreach (ActorStatsDeclaration stat in action.Mutators.Keys)
                 {
-                    StatMutators.Add(stat, new StatMutatorBus(stat));
-                }
+                    if (!StatMutators.ContainsKey(stat))
+                    {
+                        StatMutators.Add(stat, new StatMutatorBus(stat));
+                    }
 
-                foreach(StatMutator mutator in action.Mutators[stat])
-                {
-                    StatMutators[stat].InsertMutator(mutator);
+                    foreach (StatMutator mutator in action.Mutators[stat])
+                    {
+                        StatMutators[stat].InsertMutator(mutator);
+                    }
                 }
             }
         }

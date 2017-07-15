@@ -18,8 +18,8 @@ public class Player : MonoBehaviour {
 	void Start ()
     {
         actionReceivers = new List<ActorActionReceiver>();
-        actionReceivers.Add(Mechanics);
         actionReceivers.Add(Movement);
+        actionReceivers.Add(Mechanics);        
 	}
 
     private void FixedUpdate()

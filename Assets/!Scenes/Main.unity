@@ -321,21 +321,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FloatStats:
-    _Buckets: ffffffff00000000020000000100000003000000ffffffff0500000004000000
-    _HashCodes: 0100000003000000020000000400000007000000060000000000000000000000
+    _Buckets: ffffffff00000000020000000100000003000000ffffffff0400000005000000
+    _HashCodes: 0100000003000000020000000400000006000000070000000000000000000000
     _Next: ffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000
     _Count: 6
-    _Version: 51
+    _Version: 58
     _FreeList: -1
     _FreeCount: 0
-    _Keys: 0100000003000000020000000400000007000000060000000000000000000000
+    _Keys: 0100000003000000020000000400000006000000070000000000000000000000
     _Values:
-    - 1
+    - 2
     - 100
     - 1.75
     - 50
     - 1
     - 3
+    - 0
+    - 0
+  FloatStatsForThisUpdate:
+    _Buckets: ffffffffffffffff
+    _HashCodes: 0000000000000000
+    _Next: 0000000000000000
+    _Count: 0
+    _Version: 0
+    _FreeList: -1
+    _FreeCount: 0
+    _Keys: 0000000000000000
+    _Values:
     - 0
     - 0
 --- !u!114 &501462484

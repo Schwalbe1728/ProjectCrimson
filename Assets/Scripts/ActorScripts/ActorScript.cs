@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Actor : MonoBehaviour {
+public class ActorScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

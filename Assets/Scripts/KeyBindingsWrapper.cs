@@ -25,6 +25,8 @@ public class MovementBindings
 
     public bool JumpKeyDown { get { return Input.GetButtonDown("Jump"); } }
 
+    public bool DodgeRollKeyDown { get { return Input.GetButtonDown("DodgeRoll"); } }
+
     public Vector3 MoveVector
     {
         get

@@ -26,18 +26,28 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     {
         if(action is Move && timeDelay <= 0 && !InAir)
         {
-            DeclareMovement((action as Move).MovementVector.normalized);            
+            DeclareMovement((action as Move).MovementVector.normalized);
+            action.Interpret();       
         }
 
-        if(action is Jump && JumpsAvailable > 0)
+        if (action is DodgeRoll && timeDelay <= 0 && !InAir)
         {
-            //VerticalVelocity = Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpSpeed);
+            DeclareMovement((action as DodgeRoll).MovementVector.normalized);
+            action.Interpret();
+        }
+
+        if (action is Jump && JumpsAvailable > 0)
+        {
             VerticalVelocity = Mechanics.Movement.JumpSpeed;
             InAir = true;
-            JumpsAvailable--;            
+            JumpsAvailable--;
+            action.Interpret();
         }
 
-        timeDelay += action.BaseTimeDelay;
+        if (action.Interpreted)
+        {
+            timeDelay += action.BaseTimeDelay;
+        }
     }
 
     public void DeclareMovement(Vector3 mov)
@@ -66,7 +76,7 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
 
         if (MostRecentVectorDeclaration != Vector3.zero)
         {
-            Momentum = MostRecentVectorDeclaration * speed;
+            Momentum = MostRecentVectorDeclaration;
             momentumTime = momentumDuration;
         }
         else
@@ -75,9 +85,10 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
                 momentumTime = Mathf.Clamp(momentumTime - delta, 0, momentumDuration);            
         }
 
-        rigidBody.velocity = (Momentum * momentumTime / momentumDuration) + new Vector3(0, VerticalVelocity, 0);
+        rigidBody.velocity = (Momentum * momentumTime / momentumDuration) * speed + new Vector3(0, VerticalVelocity, 0);
 
-        if(InAir) VerticalVelocity += Gravity * delta;
+        if (InAir) VerticalVelocity += Gravity * delta;
+        else VerticalVelocity = 0;
 
         MostRecentVectorDeclaration = Vector3.zero;        
 
