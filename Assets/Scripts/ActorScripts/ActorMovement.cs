@@ -16,11 +16,14 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     private float VerticalVelocity = 0;
     private float Gravity = Physics.gravity.y;
 
-    private bool InAir = false;
+    [SerializeField]
+    private bool InAir = true;
     private int JumpsAvailable;
 
     [SerializeField]
     private ActorMechanics Mechanics;
+
+    private List<GameObject> listOfColliders;
 
     public void InterpretAction(ActorAction action)
     {
@@ -65,6 +68,10 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
         Momentum = Vector3.zero;
 
         rigidBody.velocity = Vector3.zero;
+
+        VerticalVelocity = 0;
+
+        listOfColliders = new List<GameObject>();
     }
 	
 	// Update is called once per frame
@@ -87,7 +94,12 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
 
         rigidBody.velocity = (Momentum * momentumTime / momentumDuration) * speed + new Vector3(0, VerticalVelocity, 0);
 
-        if (InAir) VerticalVelocity += Gravity * delta;
+        if (InAir)
+        {
+            VerticalVelocity += Gravity * delta;
+
+            if (VerticalVelocity < -100) Mechanics.Health.ApplyDamage(500);
+        }
         else VerticalVelocity = 0;
 
         MostRecentVectorDeclaration = Vector3.zero;        
@@ -99,15 +111,37 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     {
         Debug.Log("CollisionEnter");
 
-        InAir = false;
-        //JumpsAvailable = (int)Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpsAllowed);
-        JumpsAvailable = (int)Mechanics.Movement.JumpsAvailable;
-        VerticalVelocity = 0;
+        listOfColliders.Add(collision.gameObject);
+
+        InAir = listOfColliders.Find(c => c.tag.Equals("Ground") || c.tag.Equals("Terrain")) == null;
+
+        if (!InAir)
+        {            
+            //JumpsAvailable = (int)Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpsAllowed);
+            JumpsAvailable = (int)Mechanics.Movement.JumpsAvailable;
+
+            if (VerticalVelocity < Gravity)
+            {
+                float fallDmg = - 2.5f * (VerticalVelocity + 0.5f * Gravity);
+
+                Debug.Log("Fall damage! : " + fallDmg);
+                Mechanics.Health.ApplyDamage(fallDmg);
+            }
+
+            VerticalVelocity = 0;
+        }      
     }
 
     void OnCollisionExit(Collision collision)
     {
+       
         Debug.Log("CollisionExit");
-        InAir = true;
+
+        listOfColliders.RemoveAll( c => c.Equals(collision.gameObject));
+
+        if(listOfColliders.Find(c => c.tag.Equals("Terrain") || c.tag.Equals("Ground")) == null)
+        {
+            InAir = true;
+        }
     }
 }

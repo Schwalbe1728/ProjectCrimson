@@ -37,6 +37,8 @@ public class GameRandom
     {
         StringBuilder builder = new StringBuilder();
 
+        if (SeedCharsAvailable == null) Initialize();
+
         for(int i = 0; i < SeedLength; i++)
         {
             builder.Append(SeedCharsAvailable[SeedGenerationRandom.Next(SeedCharsAvailable.Length)]);
@@ -66,34 +68,46 @@ public class GameRandom
         Debug.Log("Seed: " + Seed + ", HashCode: " + Seed.GetHashCode());        
     }
 
-    public int NextInt()
+    public static int NextInt()
     {
+        if (Rand == null) InitiateWithSeed();
+
         return Rand.Next();
     }
 
-    public int NextInt(int max)
+    public static int NextInt(int max)
     {
+        if (Rand == null) InitiateWithSeed();
+
         return Rand.Next(max);
     }
 
-    public int NextInt(int min, int max)
+    public static int NextInt(int min, int max)
     {
+        if (Rand == null) InitiateWithSeed();
+
         return Rand.Next(min, max);
     }
 
-    public float NextFloat()
+    public static float NextFloat()
     {
+        if (Rand == null) InitiateWithSeed();
+
         return (float)Rand.NextDouble();
     }
 
-    public float NextFloat(float max)
+    public static float NextFloat(float max)
     {
+        if (Rand == null) InitiateWithSeed();
+
         return max * NextFloat();
     }
 
-    public float NextFloat(float min, float max)
+    public static float NextFloat(float min, float max)
     {
-        if(min > max)
+        if (Rand == null) InitiateWithSeed();
+
+        if (min > max)
         {
             float tmp = min;
             min = max;

@@ -13,11 +13,11 @@ public class CameraScript : MonoBehaviour {
     [SerializeField]
     private float MaxDistance = 7;
 
-    private Vector3 CameraPosition;
+    private Vector3 CameraPosition;    
 
 	// Use this for initialization
 	void Start () {
-        CameraPosition = transform.position;
+        CameraPosition = transform.position;               
 	}
 	
 	// Update is called once per frame
@@ -54,6 +54,15 @@ public class CameraScript : MonoBehaviour {
         }
 
         transform.SetPositionAndRotation(CameraPosition, new Quaternion());
-        transform.LookAt(lookAtPosition);
+
+        Vector3 mousePosition =
+            4 * new Vector3(
+                            (Screen.width - Input.mousePosition.x) / Screen.width - 0.5f,
+                            0,
+                            (Screen.height - Input.mousePosition.y) / Screen.height - 0.5f
+                           );
+
+        transform.LookAt(lookAtPosition.position + Vector3.ProjectOnPlane(-mousePosition, Vector3.up));
+        
 	}
 }

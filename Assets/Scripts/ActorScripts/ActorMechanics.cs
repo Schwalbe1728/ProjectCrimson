@@ -43,6 +43,16 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
         return (FloatStats.ContainsKey(stat)) ? FloatStats[stat] : 0;
     }
 
+    public void AddMutator(ActorStatsDeclaration stat, StatMutator mutator)
+    {
+        if (!StatMutators.ContainsKey(stat))
+        {
+            StatMutators.Add(stat, new StatMutatorBus(stat));
+        }
+
+        StatMutators[stat].InsertMutator(mutator);
+    }
+
 	// Use this for initialization
 	void Start ()
     {
