@@ -4,6 +4,87 @@ using UnityEngine;
 
 public class KeyBindingsWrapper : MonoBehaviour {
     public static MovementBindings Movement = new MovementBindings();
+	public static MouseBidnings Mouse = new MouseBidnings();
+
+	void Update()
+	{
+		Mouse.Update();
+	}
+}
+
+public delegate void MouseDown();
+public delegate void MouseUp();
+
+public class MouseBidnings
+{
+	public event MouseDown OnMouseDown;
+	public event MouseUp OnMouseUp;
+
+	private enum MouseFunctions
+	{
+		Fire,
+		OpenLevelUpMenu
+	}
+
+	private Dictionary<MouseFunctions, string> MouseFunctionsToAxisName
+	= new Dictionary<MouseFunctions, string> () {
+		{ MouseFunctions.Fire, "Fire1" },
+		{ MouseFunctions.OpenLevelUpMenu, "Fire2" }
+	};
+
+	private Dictionary<MouseFunctions, bool> MouseButtonAvailability 
+	= new Dictionary<MouseFunctions, bool> () {
+		{ MouseFunctions.Fire, true },
+		{ MouseFunctions.OpenLevelUpMenu, true }
+	};
+
+	public void Update()
+	{
+		if (FireMouseButtonDown) 
+		{
+			MouseButtonAvailability [MouseFunctions.Fire] = false;
+
+			if (OnMouseDown != null) 
+			{
+				OnMouseDown ();
+			}
+		}
+
+		if (FireMouseButtonUp) 
+		{
+			MouseButtonAvailability [MouseFunctions.Fire] = true;
+
+			if (OnMouseUp != null) 
+			{
+				OnMouseUp ();
+			}
+		}
+			
+	}
+
+	public bool FireMouseButtonPressed
+	{
+		get 
+		{
+			return Input.GetAxis (MouseFunctionsToAxisName [MouseFunctions.Fire]) != 0;
+		}
+	}
+
+	public bool FireMouseButtonDown
+	{
+		get 
+		{
+			return FireMouseButtonPressed && MouseButtonAvailability [MouseFunctions.Fire];
+		}
+	}
+
+	public bool FireMouseButtonUp
+	{
+		get 
+		{
+			return !FireMouseButtonPressed && !MouseButtonAvailability [MouseFunctions.Fire];
+		}
+	}
 }
 
 public class MovementBindings

@@ -22,5 +22,7 @@ public enum ActorStatsDeclaration
     CriticalChance,
     CriticalMultiplicator,
     ReloadSpeed,
-    FireRate    
+    FireRate,
+
+	ExperienceIncomeModificator,
 }

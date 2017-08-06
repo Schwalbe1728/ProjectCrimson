@@ -15,6 +15,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
     public MovementStats Movement { get; private set; }
     public HealthStats Health { get; private set; }
     public CombatStats Combat { get; private set; }
+	public ExperienceStats Experience { get; private set; }
 
     public void InterpretAction(ActorAction action)
     {
@@ -67,6 +68,8 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
         Movement = new MovementStats(StatMutators, FloatStatsForThisUpdate);
         Health = new HealthStats(StatMutators, FloatStatsForThisUpdate);
         Combat = new CombatStats(StatMutators, FloatStatsForThisUpdate);
+		Experience = new ExperienceStats (StatMutators, FloatStatsForThisUpdate);
+
     }
 	
 	// Update is called once per frame
@@ -190,6 +193,8 @@ public class HealthStats
     {
         dmg = DamageTakenModificator * dmg;
 
+		Debug.Log ("ApplyDamage");
+
         AddMutator(ActorStatsDeclaration.CurrentHealthPoints, StatMutatorFactory.ImmidiateMutatorFlat(-dmg));
     }
 
@@ -212,7 +217,7 @@ public class HealthStats
         get
         {
             return (finalStats.ContainsKey(ActorStatsDeclaration.CurrentHealthPoints)) ?
-                     finalStats[ActorStatsDeclaration.CurrentHealthPoints] : 0;
+                     finalStats[ActorStatsDeclaration.CurrentHealthPoints] : 1;
         }
     }
 
@@ -324,4 +329,54 @@ public class CombatStats
         get { return 60.0f / FireRate; }
     }
 
+}
+
+public class ExperienceStats
+{
+	private Dictionary<ActorStatsDeclaration, StatMutatorBus> statMutators;
+	private IDictionary<ActorStatsDeclaration, float> finalStats;
+
+	private float experience;
+	private int level;
+
+	public ExperienceStats(Dictionary<ActorStatsDeclaration, StatMutatorBus> mutators, IDictionary<ActorStatsDeclaration, float> statsAfterModif)
+	{
+		statMutators = mutators;
+		finalStats = statsAfterModif;
+
+		experience = 0;
+		level = 0;
+	}
+
+	public void AddMutator(ActorStatsDeclaration stat, StatMutator mut)
+	{
+		if (!statMutators.ContainsKey(stat))
+		{
+			statMutators.Add(stat, new StatMutatorBus(stat));
+		}
+
+		statMutators[stat].InsertMutator(mut);
+	}
+
+	public float Experience { get { return experience; } }
+	public int Level { get { return level; } }
+
+	public float ExperienceModificator
+	{
+		get
+		{
+			return (finalStats.ContainsKey(ActorStatsDeclaration.ExperienceIncomeModificator)) ?
+				finalStats[ActorStatsDeclaration.ExperienceIncomeModificator] : 1;
+		}
+	}
+
+	public void GainExperience(float exp)
+	{
+		experience += exp * ExperienceModificator;
+	}
+
+	public void GainLevel()
+	{
+		level++;
+	}
 }

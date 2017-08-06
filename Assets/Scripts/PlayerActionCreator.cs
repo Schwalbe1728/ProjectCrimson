@@ -64,5 +64,16 @@ public class PlayerActionCreator : MonoBehaviour, ActorActionCreator
         {
             DeclaredActions.Add(new Jump(Vector3.zero));
         }
+
+		if (KeyBindingsWrapper.Mouse.FireMouseButtonPressed) 
+		{
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+
+			if(Physics.Raycast(ray, out hit, 100.0f))
+			{
+				DeclaredActions.Add (new FireWeapon (hit.point));
+			}				
+		}
 	}
 }

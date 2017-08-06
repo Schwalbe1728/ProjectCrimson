@@ -66,5 +66,6 @@ public enum AttackType
 {
     Melee,
     Projectile,
-    AreaOfEffect
+    AreaOfEffect,
+	Hitscan
 }

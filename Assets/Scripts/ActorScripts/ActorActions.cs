@@ -18,6 +18,19 @@ public abstract class ActorAction
     public void Interpret() { Interpreted = true; }
 }
 
+public abstract class CombatAction : ActorAction
+{
+	public Vector3 TargetPoint { get; protected set; }
+}
+
+public class FireWeapon : CombatAction
+{
+	public FireWeapon(Vector3 target)
+	{
+		TargetPoint = target;
+	}
+}
+
 public abstract class MovementAction : ActorAction
 {
     public Vector3 MovementVector { get; protected set; }

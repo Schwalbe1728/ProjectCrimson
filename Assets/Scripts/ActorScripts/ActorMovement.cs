@@ -118,7 +118,7 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
         if (!InAir)
         {            
             //JumpsAvailable = (int)Mechanics.GetFloatStatValue(ActorStatsDeclaration.JumpsAllowed);
-            JumpsAvailable = (int)Mechanics.Movement.JumpsAvailable;
+            JumpsAvailable = (int)Mechanics.Movement.JumpsAvailable;		
 
             if (VerticalVelocity < Gravity)
             {
