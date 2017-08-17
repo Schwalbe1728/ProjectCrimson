@@ -41,8 +41,10 @@ public class PerformedRangeAttackActorEventArgs : ActorEventArgs
 	public Vector3 Direction { get; private set; }
 	public float SpawnOffset { get; private set; }
 	public float ProjectileVelocity { get; private set; }
+	public float NumberOfProjectiles { get; set; }
+	public float MaxDispersionAngle { get; private set; }
 
-	public PerformedRangeAttackActorEventArgs(Attack att, ActorScript attacker, Vector3 origin, Vector3 dir, float offset, float velocity = float.MaxValue)
+	public PerformedRangeAttackActorEventArgs(Attack att, ActorScript attacker, Vector3 origin, Vector3 dir, float offset, float velocity = float.MaxValue, float dispersion = 60)
 	{
 		Attack = att;
 		Attacker = attacker;
@@ -51,6 +53,9 @@ public class PerformedRangeAttackActorEventArgs : ActorEventArgs
 		ProjectileVelocity = velocity;
 
 		SpawnOffset = offset + 0.2f;
+
+		NumberOfProjectiles = 1;
+
 	}
 }
 

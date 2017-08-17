@@ -9,6 +9,8 @@ public class RangedAttacksManager : MonoBehaviour {
 	[SerializeField]
 	GameObject projectilePrefab;
 
+	float projectileRadius;
+
 	public void Subscribe(ActorScript actor)
 	{
 		actor.OnRangedAttack += HandleRangedAttack;
@@ -16,7 +18,7 @@ public class RangedAttacksManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		projectileRadius = projectilePrefab.GetComponent<SphereCollider> ().radius;
 	}
 	
 	// Update is called once per frame
@@ -33,14 +35,22 @@ public class RangedAttacksManager : MonoBehaviour {
 	{
 		GameObject bullet = (GameObject)Instantiate
 			(projectilePrefab,
-			                    args.OriginPoint + args.Direction.normalized * args.SpawnOffset,
+				args.OriginPoint + (new Vector3(args.Direction.x, 0, args.Direction.z)).normalized * (args.SpawnOffset + projectileRadius),
 			                    new Quaternion ()
 		                    );
 
 		ProjectileScript temp = bullet.GetComponent<ProjectileScript> ();
 
+		//float tmprand = GameRandom.NextFloat (-10, 10);
+		Vector3 dir = 
+			Quaternion.AngleAxis( GameRandom.NextFloat(-2.5f,2.5f), Vector3.up) * 
+			Quaternion.AngleAxis( GameRandom.NextFloat(-5,5), Vector3.right) * 
+			args.Direction.normalized;
+		
+		//Debug.Log (dir);
+
 		temp.AttackData = args.Attack;
-		temp.Direction = args.Direction;
+		temp.Direction = dir;
 		temp.Velocity = args.ProjectileVelocity;
 
 		//bullet.GetComponent<Rigidbody> ().velocity = args.Direction.normalized * args.ProjectileVelocity;

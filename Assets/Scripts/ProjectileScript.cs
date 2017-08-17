@@ -28,6 +28,14 @@ public class ProjectileScript : MonoBehaviour {
 		distanceLeft -= Velocity * Time.deltaTime;
 	}
 
+	void OnCollisionEnter(Collision collision)
+	{
+		if (!collision.gameObject.tag.Equals ("HostileProjectile")) 
+		{
+			Destroy (gameObject);
+		}
+	}
+
 	private IEnumerator WatchForExpiring()
 	{
 		while (distanceLeft > 0) {

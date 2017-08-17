@@ -23,6 +23,17 @@ public class ActorScript : MonoBehaviour {
 	[SerializeField]
 	protected ActorCombatManager CombatManager;
 
+	[SerializeField]
+	protected AudioClip ActorHurtClip;
+
+	[SerializeField]
+	protected AudioClip ActorDiedClip;
+
+	[SerializeField]
+	protected AudioClip PerformedAttack;
+
+	protected AudioSource audioSource;
+
     protected ActorActionCreator ActionCreator;
 
     protected List<ActorActionReceiver> actionReceivers;
@@ -44,6 +55,8 @@ public class ActorScript : MonoBehaviour {
 
     public void Initialize()
     {
+		audioSource = GetComponent<AudioSource> ();
+
         actionReceivers = new List<ActorActionReceiver>();
         actionReceivers.Add(Movement);
         actionReceivers.Add(Mechanics);
@@ -56,7 +69,7 @@ public class ActorScript : MonoBehaviour {
 		RangedAttManager.Subscribe (this);
 
 		CapsuleCollider temp = GetComponent<CapsuleCollider> ();
-		projectileSpawnOffset = temp.radius;
+		projectileSpawnOffset = temp.radius + 0.1f;
     }
 
 	public float Experience { get { return Mechanics.Experience.Experience; } }
@@ -74,7 +87,7 @@ public class ActorScript : MonoBehaviour {
 	{
 		Mechanics.Experience.GainLevel ();
 
-		Debug.Log ("Actor has gained Level " + Mechanics.Experience.Level);
+		//Debug.Log ("Actor has gained Level " + Mechanics.Experience.Level);
 
 		if(OnActorGainedLevel != null)
 			OnActorGainedLevel (args);
@@ -85,12 +98,29 @@ public class ActorScript : MonoBehaviour {
 		if (att.Type == AttackType.Projectile) 
 		{
 			PerformedRangeAttackActorEventArgs args = 
-				new PerformedRangeAttackActorEventArgs (att, this, this.transform.position, direction, projectileSpawnOffset, 25f);
+				new PerformedRangeAttackActorEventArgs (att, this, this.transform.position, direction, projectileSpawnOffset, 65f);
 
 			if (OnRangedAttack != null) 
 			{
-				OnRangedAttack (args);
+				OnRangedAttack (args);			
 			}
+		}
+	}
+
+	public void CreateMeleeAttack(Attack att, string targetTag)
+	{
+		Collider[] result = Physics.OverlapSphere (
+			                     transform.position,
+			                     GetComponent<CapsuleCollider> ().radius + 1.2f,
+								1 << (targetTag.Equals ("AlliedCharacters") ? 8 : 9));
+
+		Collider target = (result.Length > 0)? result[GameRandom.NextInt(result.Length)] : null;
+		
+		if(targetTag != null)
+		{
+			BeingAttackedEventArgs args = new BeingAttackedEventArgs (att, this);
+
+			target.gameObject.GetComponent<ActorScript> ().HurtActor (args);
 		}
 	}
 
@@ -123,7 +153,8 @@ public class ActorScript : MonoBehaviour {
 
             foreach (ActorActionReceiver receiver in actionReceivers)
             {
-                receiver.InterpretAction(action);
+				if(receiver != null)
+					receiver.InterpretAction(action);
             }
         }
         
@@ -140,7 +171,7 @@ public class ActorScript : MonoBehaviour {
 	{
 		if (collision.gameObject.tag.Equals ("HostileProjectile")) 
 		{
-			Debug.Log ("Ouch! Hit by a projectile" + this.tag);
+			//Debug.Log ("Ouch! Hit by a projectile" + this.tag);
 
 			Attack att = collision.gameObject.GetComponent<ProjectileScript> ().AttackData;
 
@@ -148,6 +179,11 @@ public class ActorScript : MonoBehaviour {
 
 			OnBeingHit (args);
 		}
+	}
+
+	public void HurtActor(BeingAttackedEventArgs args)
+	{
+		OnBeingHit (args);
 	}
 
 	public void RegisterBeingAttacked(BeingAttackedEventArgs args)
@@ -189,6 +225,13 @@ public class ActorScript : MonoBehaviour {
 			ActorGainedExperienceEventArgs tempArgs = new ActorGainedExperienceEventArgs (args.Killer, this.ExpReward);
 			args.Killer.GainExperience (tempArgs);
 		}
+	}
+
+	protected void PlaySound(AudioClip clip)
+	{
+		audioSource.Stop ();
+		audioSource.clip = clip;
+		audioSource.Play ();
 	}
 }
 

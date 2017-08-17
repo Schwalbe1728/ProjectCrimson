@@ -108,11 +108,10 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     }  
     
     void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("CollisionEnter");
-
+    {        
         listOfColliders.Add(collision.gameObject);
 
+		listOfColliders.RemoveAll (c => c == null);
         InAir = listOfColliders.Find(c => c.tag.Equals("Ground") || c.tag.Equals("Terrain")) == null;
 
         if (!InAir)
@@ -133,10 +132,8 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
     }
 
     void OnCollisionExit(Collision collision)
-    {
-       
-        Debug.Log("CollisionExit");
-
+	{               
+		listOfColliders.RemoveAll (c => c == null);
         listOfColliders.RemoveAll( c => c.Equals(collision.gameObject));
 
         if(listOfColliders.Find(c => c.tag.Equals("Terrain") || c.tag.Equals("Ground")) == null)

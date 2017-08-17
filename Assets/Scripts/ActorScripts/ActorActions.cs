@@ -31,6 +31,19 @@ public class FireWeapon : CombatAction
 	}
 }
 
+public class MeleeAttack : CombatAction
+{
+	public float WindUpTime {get; private set;}
+	public string TargetTag { get; private set; }
+
+	public MeleeAttack(float windUp, float baseDelay, string target)
+	{
+		WindUpTime = windUp;
+		BaseTimeDelay = baseDelay;
+		TargetTag = target;
+	}
+}
+
 public abstract class MovementAction : ActorAction
 {
     public Vector3 MovementVector { get; protected set; }

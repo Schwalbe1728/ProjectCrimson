@@ -67,7 +67,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 
         Movement = new MovementStats(StatMutators, FloatStatsForThisUpdate);
         Health = new HealthStats(StatMutators, FloatStatsForThisUpdate);
-        Combat = new CombatStats(StatMutators, FloatStatsForThisUpdate);
+        Combat = new CombatStats(FloatStats, StatMutators, FloatStatsForThisUpdate);
 		Experience = new ExperienceStats (StatMutators, FloatStatsForThisUpdate);
 
     }
@@ -251,11 +251,13 @@ public class HealthStats
 
 public class CombatStats
 {
+	private ActorStatsToFloatDictionary FloatStats;
     private Dictionary<ActorStatsDeclaration, StatMutatorBus> statMutators;
     private IDictionary<ActorStatsDeclaration, float> finalStats;
 
-    public CombatStats(Dictionary<ActorStatsDeclaration, StatMutatorBus> mutators, IDictionary<ActorStatsDeclaration, float> statsAfterModif)
+	public CombatStats(ActorStatsToFloatDictionary floatStats, Dictionary<ActorStatsDeclaration, StatMutatorBus> mutators, IDictionary<ActorStatsDeclaration, float> statsAfterModif)
     {
+		FloatStats = floatStats;
         statMutators = mutators;
         finalStats = statsAfterModif;
     }
@@ -269,6 +271,20 @@ public class CombatStats
 
         statMutators[stat].InsertMutator(mut);
     }
+
+	public void ApplyStatsForNewWeapon(WeaponStats weaponStats)
+	{
+		//weaponStats.ClipSize
+		CriticalChance = weaponStats.CriticalChance;
+		CriticalMultiplicator = weaponStats.CriticalMulti;
+		Damage = weaponStats.Damage;
+		DamageVariance = weaponStats.DamageVariance;
+		//? weaponStats.ProjectilesPerShot
+		//weaponStats.ProjectileVelocity
+		ReloadSpeed = weaponStats.ReloadSpeed;
+		RoundsPerMinute = weaponStats.RoundsPerMinute;
+	}
+
     
     public float Damage
     {
@@ -277,6 +293,18 @@ public class CombatStats
             return (finalStats.ContainsKey(ActorStatsDeclaration.Damage)) ?
                      finalStats[ActorStatsDeclaration.Damage] : 0;
         }
+
+		set 
+		{
+			if (FloatStats.ContainsKey (ActorStatsDeclaration.Damage)) 
+			{
+				FloatStats [ActorStatsDeclaration.Damage] = value;
+			} 
+			else 
+			{
+				FloatStats.Add (ActorStatsDeclaration.Damage, value);
+			}
+		}
     }
 
     public float DamageVariance
@@ -286,6 +314,18 @@ public class CombatStats
             return (finalStats.ContainsKey(ActorStatsDeclaration.DamageVariance)) ?
                      finalStats[ActorStatsDeclaration.DamageVariance] : 0;
         }
+
+		set 
+		{
+			if (FloatStats.ContainsKey (ActorStatsDeclaration.DamageVariance)) 
+			{
+				FloatStats [ActorStatsDeclaration.DamageVariance] = value;
+			} 
+			else 
+			{
+				FloatStats.Add (ActorStatsDeclaration.DamageVariance, value);
+			}
+		}
     }
 
     public float CriticalChance
@@ -295,6 +335,17 @@ public class CombatStats
             return (finalStats.ContainsKey(ActorStatsDeclaration.CriticalChance)) ?
                      finalStats[ActorStatsDeclaration.CriticalChance] : 0.01f;
         }
+		set 
+		{
+			if (FloatStats.ContainsKey (ActorStatsDeclaration.CriticalChance)) 
+			{
+				FloatStats [ActorStatsDeclaration.CriticalChance] = value;
+			} 
+			else 
+			{
+				FloatStats.Add (ActorStatsDeclaration.CriticalChance, value);
+			}
+		}
     }
 
     public float CriticalMultiplicator
@@ -304,6 +355,18 @@ public class CombatStats
             return (finalStats.ContainsKey(ActorStatsDeclaration.CriticalMultiplicator)) ?
                      finalStats[ActorStatsDeclaration.CriticalMultiplicator] : 2f;
         }
+
+		set 
+		{
+			if (FloatStats.ContainsKey (ActorStatsDeclaration.CriticalMultiplicator)) 
+			{
+				FloatStats [ActorStatsDeclaration.CriticalMultiplicator] = value;
+			} 
+			else 
+			{
+				FloatStats.Add (ActorStatsDeclaration.CriticalMultiplicator, value);
+			}
+		}
     }
 
     public float ReloadSpeed
@@ -313,20 +376,44 @@ public class CombatStats
             return (finalStats.ContainsKey(ActorStatsDeclaration.ReloadSpeed)) ?
                      finalStats[ActorStatsDeclaration.ReloadSpeed] : 0;
         }
+
+		set 
+		{
+			if (FloatStats.ContainsKey (ActorStatsDeclaration.ReloadSpeed)) 
+			{
+				FloatStats [ActorStatsDeclaration.ReloadSpeed] = value;
+			} 
+			else 
+			{
+				FloatStats.Add (ActorStatsDeclaration.ReloadSpeed, value);
+			}
+		}
     }
 
-    public float FireRate
+    public float RoundsPerMinute
     {
         get
         {
             return (finalStats.ContainsKey(ActorStatsDeclaration.FireRate)) ?
                      finalStats[ActorStatsDeclaration.FireRate] : 90;
         }
+
+		set 
+		{
+			if (FloatStats.ContainsKey (ActorStatsDeclaration.FireRate)) 
+			{
+				FloatStats [ActorStatsDeclaration.FireRate] = value;
+			} 
+			else 
+			{
+				FloatStats.Add (ActorStatsDeclaration.FireRate, value);
+			}
+		}
     }
 
     public float AttackDelay
     {
-        get { return 60.0f / FireRate; }
+        get { return 60.0f / RoundsPerMinute; }
     }
 
 }

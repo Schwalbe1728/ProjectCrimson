@@ -6,23 +6,31 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 {
 	public bool Reloading { get; private set; }
 
+	public int AmmoInClip { get { return ammoInClip; } }
+	public int MaxAmmo { get { return (int)Weapon.ClipSize; } }
+
 	[SerializeField]
 	private ActorScript ActorsPosition;
 
 	[SerializeField]
 	private ActorMechanics Mechanics;
 
+	[SerializeField]
+	private WeaponStats Weapon;
+
 	private float attackDelay;
 	private int ammoInClip;
 
 	private bool IsPlayer;
+
+	private float audioSourceVolume;
+	private AudioSource audioSource;
 
 	public void InterpretAction(ActorAction action)
 	{		
 		if (action is FireWeapon && attackDelay <= 0 && (!IsPlayer || ammoInClip > 0)) 
 		{
 			ammoInClip--;
-			Debug.Log ("Fire Weapon: " + ammoInClip + " bullets in clip left");
 
 			attackDelay += Mechanics.Combat.AttackDelay;
 
@@ -31,7 +39,7 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 
 			Attack att = 
 				new Attack (
-					AttackType.Projectile,
+					Weapon.ProjectileType,
 					Mechanics.Combat.Damage,
 					Mechanics.Combat.DamageVariance,
 					Mechanics.Combat.CriticalChance,
@@ -39,18 +47,39 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 					ActorsPosition);
 
 			ActorsPosition.CreateRangedAttack (att, direction);
+
+			audioSource.volume = audioSourceVolume * GameRandom.NextFloat (0.9f, 1);
+			audioSource.pitch = GameRandom.NextFloat (0.8f, 1.2f);
+			audioSource.Play ();
+		}
+
+		if (action is MeleeAttack && attackDelay <= 0) 
+		{
+			attackDelay += (action as MeleeAttack).WindUpTime + Mechanics.Combat.AttackDelay;
+
+			StartCoroutine ("MeleeAttackWithWindUp", action as MeleeAttack);
 		}
 	}
 
 	public void LoadClip()
 	{
-		ammoInClip = 10;
+		ammoInClip = MaxAmmo;
 		Reloading = false;
+	}
+
+	public void GiveWeapon(WeaponStats weaponStats)
+	{
+		Weapon = weaponStats;
+		Mechanics.Combat.ApplyStatsForNewWeapon (weaponStats);
+		audioSource.clip = weaponStats.AttackClip;
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		audioSource = GetComponent<AudioSource> ();
+		audioSourceVolume = audioSource.volume;
+
 		attackDelay = 0;
 		LoadClip ();
 
@@ -60,6 +89,8 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 		{
 			(ActorsPosition as Player).OnReloadFinished += LoadClip;
 		}
+
+		GiveWeapon (Weapon);
 	}
 	
 	// Update is called once per frame
@@ -75,5 +106,20 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 			(ActorsPosition as Player).InitiateReloadingWeapon (Mechanics.Combat.ReloadSpeed);
 			Reloading = true;
 		}
+	}
+
+	private IEnumerator MeleeAttackWithWindUp(MeleeAttack att)
+	{
+		yield return new WaitForSeconds (att.WindUpTime);
+
+		Attack attack = new Attack (
+			                AttackType.Melee, 
+			                Mechanics.Combat.Damage,
+			                Mechanics.Combat.DamageVariance,
+			                Mechanics.Combat.CriticalChance,
+			                Mechanics.Combat.CriticalMultiplicator,
+			                ActorsPosition);
+
+		ActorsPosition.CreateMeleeAttack (attack, att.TargetTag);
 	}
 }

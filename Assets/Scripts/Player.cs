@@ -50,12 +50,12 @@ public class Player : ActorScript
 
 	private void GetFucked(BeingAttackedEventArgs args)
 	{
-		Debug.Log ("OnBeingHit: Get Fucked");
+		//Debug.Log ("OnBeingHit: Get Fucked");
 	}
 
 	private void PlayerDeath(ActorDiedEventArgs args)
 	{
-		Debug.Log ("YOU DIED");
+		//Debug.Log ("YOU DIED");
 		StopCoroutine ("CheckExperience");
 	}
 

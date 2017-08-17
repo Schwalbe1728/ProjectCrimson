@@ -30,6 +30,19 @@ public class ActorExperienceManager : MonoBehaviour
 		actor.OnActorGainedExperience += CheckIfNewLevelReached;
 	}
 
+	public float PercentProgressBetweenLevels(float currentExp, int currentLvl)
+	{
+		if (currentLvl == PlayerNextLevelEXPRequirement.Length)
+			return 0;
+		
+		int prevLvlExp = (currentLvl == 0) ? 0 : PlayerNextLevelEXPRequirement [currentLvl-1];
+		int expNeeded = PlayerNextLevelEXPRequirement [currentLvl] - prevLvlExp;
+
+		return (currentExp - prevLvlExp) / (expNeeded);
+
+
+	}
+
 	private void CheckIfNewLevelReached(ActorGainedExperienceEventArgs args)
 	{
 		int[] tempExpTable = 

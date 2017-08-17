@@ -1,32 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BaseEnemy : ActorScript {
 
-	[SerializeField]
-	private AIActionCreator ActionCreatorToPass;   
-
 	void Start ()
 	{		
+		Mechanics = GetComponent<ActorMechanics> ();
+		Movement = GetComponent<ActorMovement> ();
+		CombatManager = GetComponent<ActorCombatManager> ();	
+
+		ExperienceManager = GameObject.Find ("EXP Manager").GetComponent<ActorExperienceManager> ();
+		RangedAttManager = GameObject.Find ("Ranged Attacks Manager").GetComponent<RangedAttacksManager> ();
+
+
+
 		Initialize();
-		ActionCreator = ActionCreatorToPass;
+
+		ActionCreator = GetComponent<EnemyActionCreator>();
 
 		Type = ActorType.Enemy;
 
 		OnBeingHit += GetFucked;
-		OnActorDied += PlayerDeath;
+		OnActorDied += EnemyDeath;
 
 		StartCoroutine ("WatchForDeath");
 	}
 
 	private void GetFucked(BeingAttackedEventArgs args)
 	{
-		Debug.Log ("Enemy OnBeingHit: Get Fucked");
+		
 	}
 
-	private void PlayerDeath(ActorDiedEventArgs args)
+	private void EnemyDeath(ActorDiedEventArgs args)
 	{
-		Debug.Log ("ENEMY DIED");
+		StopCoroutine ("WatchForDeath");
+		Destroy (gameObject);
 	}
 }
