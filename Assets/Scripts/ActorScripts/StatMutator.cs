@@ -23,6 +23,7 @@ using System.Text;
         Multiplicator
     }
 
+	[Serializable]
     public class StatMutator
     {
         private MutatorBehaviour behaviour = MutatorBehaviour.ValueConstant;
