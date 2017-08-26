@@ -11,7 +11,7 @@ public interface IPerk
 public abstract class Perk :  MonoBehaviour, IPerk
 {
 	[SerializeField]
-	protected string[] RequiredPerkIDs;
+	protected Perk[] RequiredPerks;
 
 	[SerializeField]
 	protected string PerkID;
@@ -20,20 +20,29 @@ public abstract class Perk :  MonoBehaviour, IPerk
 	protected string DisplayedName;
 
 	[SerializeField]
-	protected string Description;
+	protected string DisplayedDescription;
 
 	[SerializeField]
 	protected StatMutatorPrototype[] Mutators;
+
+	public string ID {get {return PerkID;}}
+	public string Name { get { return DisplayedName; } }
+	public string Description { get { return DisplayedDescription; } }
 
 	public abstract void ApplyPerk (Player player);
 
 	public bool RequirementsMet(Player player)
 	{
-		//sprawdź czy gracz ma wymagane perki
-		//sprawdź czy gracz już ten perk ma
+		bool result = !player.PerkActivated (this);
 
-		//TODO: To jest tylko mockup
+		if(RequiredPerks != null)
+		{
+			for (int i = 0; i < RequiredPerks.Length && result; i++) 
+			{
+				result = result && player.PerkActivated (RequiredPerks [i]);
+			}
+		}			
 
-		return !(RequiredPerkIDs != null && RequiredPerkIDs.Length > 0);
+		return result;
 	}
 }

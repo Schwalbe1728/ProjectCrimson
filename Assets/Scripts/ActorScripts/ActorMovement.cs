@@ -123,7 +123,6 @@ public class ActorMovement : MonoBehaviour, ActorActionReceiver {
             {
                 float fallDmg = - 2.5f * (VerticalVelocity + 0.5f * Gravity);
 
-                Debug.Log("Fall damage! : " + fallDmg);
                 Mechanics.Health.ApplyDamage(fallDmg);
             }
 

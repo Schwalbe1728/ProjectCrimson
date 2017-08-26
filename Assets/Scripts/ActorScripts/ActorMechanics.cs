@@ -46,6 +46,8 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
 
     public void AddMutator(ActorStatsDeclaration stat, StatMutator mutator)
     {
+		Debug.Log ("Dodaje mutator");
+
         if (!StatMutators.ContainsKey(stat))
         {
             StatMutators.Add(stat, new StatMutatorBus(stat));
@@ -110,7 +112,7 @@ public class ActorMechanics : MonoBehaviour, ActorActionReceiver {
         }
 
         FloatStats[ActorStatsDeclaration.CurrentHealthPoints] =            
-            Mathf.Clamp(Health.CurrentHealth + Health.Regeneration * delta, Health.CurrentHealth, Health.MaxHealth);
+            Mathf.Clamp(Health.CurrentHealth + Health.Regeneration, Health.CurrentHealth, Health.MaxHealth);
     }
 }
 
@@ -192,8 +194,6 @@ public class HealthStats
     public void ApplyDamage(float dmg)
     {
         dmg = DamageTakenModificator * dmg;
-
-		Debug.Log ("ApplyDamage");
 
         AddMutator(ActorStatsDeclaration.CurrentHealthPoints, StatMutatorFactory.ImmidiateMutatorFlat(-dmg));
     }

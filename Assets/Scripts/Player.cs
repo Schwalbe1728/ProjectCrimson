@@ -13,6 +13,9 @@ public class Player : ActorScript
     [SerializeField]
     private PlayerActionCreator ActionCreatorToPass;   
 
+	private PerkCatalogueScript PerksCatalogue;
+	private List<Perk> PerksActive;
+
 	public void InitiateReloadingWeapon(float reloadTime)
 	{
 		if (OnReloadStarted != null) 
@@ -23,8 +26,24 @@ public class Player : ActorScript
 		StartCoroutine (AwaitForFinishingReload(reloadTime));
 	}
 
+	public bool PerkActivated(Perk perk)
+	{
+		return PerksActive.Find (p => p.ID.Equals (perk.ID)) != null;
+	}
+
+	public void ActivatePerk(Perk perk)
+	{
+		PerksActive.Add (perk);
+		PerksCatalogue.MarkPerkAsChosen (perk);
+
+		perk.ApplyPerk (this);
+	}
+
 	void Start ()
-    {		
+    {	
+		PerksActive = new List<Perk> ();
+		PerksCatalogue = GameObject.Find ("Perk Catalogue").GetComponent<PerkCatalogueScript>();
+
         Initialize();
         ActionCreator = ActionCreatorToPass;
 
@@ -32,6 +51,8 @@ public class Player : ActorScript
 
 		OnBeingHit += GetFucked;
 		OnActorDied += PlayerDeath;
+
+		OnActorGainedLevel += Player_OnActorGainedLevel;
 
 		KeyBindingsWrapper.Mouse.OnMouseDown += MouseClickTest;
 
@@ -42,6 +63,27 @@ public class Player : ActorScript
 	void Update()
 	{		
 
+	}
+
+	void Player_OnActorGainedLevel (ActorGainedLevelEventArgs args)
+	{
+		/*
+		Perk[] perks = PerksCatalogue.GetPerksForLevelUp ();
+
+		if (perks.Length > 0) 
+		{
+			int choice = GameRandom.NextInt (perks.Length);
+
+			PerksActive.Add (perks [choice]);
+			PerksCatalogue.MarkPerkAsChosen (perks [choice]);
+
+			perks [choice].ApplyPerk (this);
+
+			Debug.Log ("Spośród " + perks.Length + " wybrano perk " + perks [choice] + ". Aktywne perki: " + PerksActive.Count);
+		}
+		*/
+
+		//GameObject.Find ("Level Up Menu").GetComponent<LevelUpMenuScript> ().SetUpMenu ();
 	}
 
 	private void MouseClickTest() {

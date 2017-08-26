@@ -51,5 +51,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a6ef753736e5843b2e8eeab493a5b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerNextLevelEXPRequirement: 640000002c010000bc020000dc0500001c0c00009c1800009c3100009c6300009cc700009c8f0100
+  PlayerNextLevelEXPRequirement: 64000000fa000000db0100002d030000270500001e080000910c00003e130000411d0000452c0000
   EnemyNextLevelEXPRequirement: 

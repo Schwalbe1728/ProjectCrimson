@@ -20,7 +20,7 @@ public class PerkCatalogueScript : MonoBehaviour
 
 		int chosenPerks = 0;
 
-		while (copy.Count > 0 && chosenPerks < 5) 
+		while (copy.Count > 0 && chosenPerks < PerkSelectionPerLevel) 
 		{
 			int choice = GameRandom.NextInt (copy.Count);
 
@@ -36,15 +36,18 @@ public class PerkCatalogueScript : MonoBehaviour
 		return result.ToArray();
 	}
 
+	public void MarkPerkAsChosen(Perk perk)
+	{
+		if (!NotPickedPerks.Remove (perk)) {
+			Debug.LogError ("MarkPerkAsChosen!!");
+		}
+	}
+
 	void Start()
 	{
-		PerkSelectionPerLevel = 5;
-
 		NotPickedPerks = new List<Perk> ();
 
 		CreatePerkList (transform);
-
-		Debug.Log ("Wybieraj!: " + GetPerksForLevelUp ().Length);
 	}
 
 	private void CreatePerkList(Transform transform)
@@ -58,7 +61,6 @@ public class PerkCatalogueScript : MonoBehaviour
 				if (temp != null) 
 				{
 					NotPickedPerks.Add (temp);
-					Debug.Log (temp);
 				}
 
 				CreatePerkList (child);

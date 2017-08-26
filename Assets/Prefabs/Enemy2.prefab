@@ -218,7 +218,7 @@ MonoBehaviour:
   ExperienceManager: {fileID: 114489039061704740, guid: 23b73278c8940c94e9f5d9e289a804e0,
     type: 2}
   RangedAttManager: {fileID: 0}
-  ExpReward: 3
+  ExpReward: 5
 --- !u!114 &114641479518554912
 MonoBehaviour:
   m_ObjectHideFlags: 1
