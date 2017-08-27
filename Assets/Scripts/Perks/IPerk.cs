@@ -20,6 +20,7 @@ public abstract class Perk :  MonoBehaviour, IPerk
 	protected string DisplayedName;
 
 	[SerializeField]
+	[Multiline]
 	protected string DisplayedDescription;
 
 	[SerializeField]

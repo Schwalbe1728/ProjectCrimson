@@ -75,5 +75,10 @@ public class PlayerActionCreator : MonoBehaviour, ActorActionCreator
 				DeclaredActions.Add (new FireWeapon (hit.point));
 			}				
 		}
+
+		if (KeyBindingsWrapper.Movement.ReloadKeyDown) 
+		{
+			DeclaredActions.Add (new ReloadWeapon ());
+		}
 	}
 }

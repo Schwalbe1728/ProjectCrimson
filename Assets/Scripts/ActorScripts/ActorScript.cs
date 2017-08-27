@@ -116,7 +116,7 @@ public class ActorScript : MonoBehaviour {
 
 		Collider target = (result.Length > 0)? result[GameRandom.NextInt(result.Length)] : null;
 		
-		if(targetTag != null)
+		if(targetTag != null && target != null)
 		{
 			BeingAttackedEventArgs args = new BeingAttackedEventArgs (att, this);
 

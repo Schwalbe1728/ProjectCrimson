@@ -31,6 +31,14 @@ public class FireWeapon : CombatAction
 	}
 }
 
+public class ReloadWeapon : CombatAction
+{
+	public ReloadWeapon()
+	{
+
+	}
+}
+
 public class MeleeAttack : CombatAction
 {
 	public float WindUpTime {get; private set;}

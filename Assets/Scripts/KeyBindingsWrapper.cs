@@ -108,6 +108,8 @@ public class MovementBindings
 
     public bool DodgeRollKeyDown { get { return Input.GetButtonDown("DodgeRoll"); } }
 
+	public bool ReloadKeyDown { get { return Input.GetButtonDown ("Reload"); } }
+
     public Vector3 MoveVector
     {
         get

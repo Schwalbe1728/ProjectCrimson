@@ -59,6 +59,11 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 
 			StartCoroutine ("MeleeAttackWithWindUp", action as MeleeAttack);
 		}
+
+		if (action is ReloadWeapon) 
+		{
+			StartCoroutine ("StartReloadingAfterDelay");
+		}
 	}
 
 	public void LoadClip()
@@ -121,5 +126,19 @@ public class ActorCombatManager : MonoBehaviour, ActorActionReceiver
 			                ActorsPosition);
 
 		ActorsPosition.CreateMeleeAttack (attack, att.TargetTag);
+	}
+
+	private IEnumerator StartReloadingAfterDelay()
+	{
+		if (IsPlayer && AmmoInClip < MaxAmmo) 
+		{
+			if (attackDelay <= 0)
+				attackDelay = 0.1f;
+
+			yield return new WaitForSeconds (attackDelay);
+
+			attackDelay += Mechanics.Combat.ReloadSpeed;
+			(ActorsPosition as Player).InitiateReloadingWeapon (Mechanics.Combat.ReloadSpeed);
+		}
 	}
 }
